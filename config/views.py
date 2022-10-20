@@ -69,9 +69,16 @@ def write(request):
 
   return render(request, 'write.html')
 
+from django.core.paginator import Paginator
+
 def list(request):
+  page = request.GET.get('page')
   # select * from article order by id desc
   article_list = Article.objects.order_by('-id')
+  
+  p = Paginator(article_list,10)
+  article_list = p.page(page)
+
   context = { 
     'article_list' : article_list 
   }
@@ -88,6 +95,16 @@ def detail(request, id):
 def update(request, id):
   # select * from article where id = ?
   article = Article.objects.get(id=id)
+  name = request.session.get('name')
+  if article.user.name != name:
+      
+      return HttpResponse('''
+        <script>
+          alert("작성자만 수정할 수 있습니다.");
+          location = "/article/detail/%s/";
+        </script>
+        '''% id)
+  name = request.session.get('name')
 
   if request.method == 'POST':
     title = request.POST.get('title')
@@ -109,9 +126,20 @@ def update(request, id):
 
 def delete(request, id):
   try:
-    # select * from article where id = ?
+    name = request.session['name']
     article = Article.objects.get(id=id)
-    article.delete()
+
+    if article.user.name == name:
+      article.delete()
+    else:
+
+      return HttpResponse('''
+      <script>
+        alert("작성자만 삭제할 수 있습니다.");
+        location = "/article/detail/%s/";
+      </script>
+      ''' % id)
+    # select * from article where id = ?
     return render(request, 'delete_success.html')
   except:
     return render(request, 'delete_fail.html')
