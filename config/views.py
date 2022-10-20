@@ -3,6 +3,18 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import hashlib
 
+def reply(request, id):
+  email = request.session.get('email')
+  user = User.objects.get(email=email)
+  article = Article.objects.get(id=id)
+  content = request.GET.get('content')
+
+  reply = Reply(content=content, user=user, article=article)
+  reply.save()
+
+  return redirect('/article/detail/%s/' % id)
+
+
 def index(request):
   # m = hashlib.sha256()
   # m.update(b"testtest")
