@@ -22,9 +22,17 @@
     <button onclick="move()" class="btn btn-danger input-lg">글쓰기</button>
  
 
-    {% for page in page_info %}
-    {{page}}/
-    {% endfor %}
+    <div style='text-align:center;'>
+      <ul class='pagination'>
+        {% for i in page_info %}
+        <li>
+          <a href='/article/list/?page={{ i }}'>
+          {{ i }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      </div>
 
     </div>
   </div>
