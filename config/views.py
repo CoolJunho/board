@@ -89,6 +89,8 @@ def list(request):
   start_page = (page - 1)//10 * 10 +1 # 페이지네이션 중 시작 페이지
   end_page = start_page + 9 #페이지네이션 중 마지막 페이지
 
+  if p.num_pages < end_page:
+    end_page = p.num_pages
 
   context = { 
     'article_list' : article_list,
