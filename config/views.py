@@ -73,14 +73,26 @@ from django.core.paginator import Paginator
 
 def list(request):
   page = request.GET.get('page')
+  
+  
   # select * from article order by id desc
   article_list = Article.objects.order_by('-id')
   
   p = Paginator(article_list,10)
-  article_list = p.page(page)
+  try:
+    article_list = p.page(page)
+    page = int(page)
+  except:
+    page = 1
+    article_list = p.page(page)
+
+  start_page = (page - 1)//10 * 10 +1 # 페이지네이션 중 시작 페이지
+  end_page = start_page + 9 #페이지네이션 중 마지막 페이지
+
 
   context = { 
-    'article_list' : article_list 
+    'article_list' : article_list,
+    'page_info' : range(start_page, end_page + 1)
   }
   return render(request, 'list.html', context)
 

@@ -20,9 +20,14 @@
       </tbody>
     </table>
     <button onclick="move()" class="btn btn-danger input-lg">글쓰기</button>
-  </div>
-</div>
+ 
 
+    {% for page in page_info %}
+    {{page}}/
+    {% endfor %}
+
+    </div>
+  </div>
 <script>
   function detail(n) {
     location = `/article/detail/${n}/`
